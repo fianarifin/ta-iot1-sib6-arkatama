@@ -33,7 +33,7 @@
    <!-- Footer END -->
 
    <!-- Optional JavaScript -->
-   @include('layouts.dashboard._foot')
+   @include('layouts.dashboard._footer')
 
 </body>
 
