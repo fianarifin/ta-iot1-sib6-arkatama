@@ -57,28 +57,68 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form class="needs-validation" novalidate>
                         <div class="form-group">
-                            <label for="addUserName">UserName</label>
-                            <input type="text" class="form-control" id="addUserName" name="name">
+                            <label for="addName">UserName</label>
+                            <input required type="text" class="form-control is-invalid" id="addName" name="name">
+
                         </div>
 
                         <div class="form-group">
                             <label for="addEmail">Email</label>
-                            <input type="email" class="form-control" id="addEmail" name="email">
+                            <input required type="email" class="form-control" id="addEmail" name="email">
                         </div>
 
                         <div class="form-group">
                             <label for="addPassword">Password</label>
-                            <input type="email" class="form-control" id="addPassword" name="password">
+                            <input required type="password" class="form-control" id="addPassword" name="password">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary" onclick="createUser()">Simpan</button>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // toastr.success('Have fun storming the castle!', 'Miracle Max Says')
+        function createUser() {
+            const url = "{{ route('api.users.store') }}";
+            // ambil form data
+            let data = {
+                name: $('#addName').val(),
+                email: $('#addEmail').val(),
+                password: $('#addPassword').val(),
+            }
+            // kirim data ke server POST /users
+            $.post(url, data)
+                .done((response) => {
+                    // tampilkan pesan sukses
+                    toastr.success(response.message, 'Sukses')
+                    // reload halaman setelah 3 detik
+                    setTimeout(() => {
+                        location.reload()
+                    }, 3000);
+                })
+                .fail((error) => {
+                    // ambil response error
+                    let response = error.responseJSON
+                    // tampilkan pesan error
+                    toastr.error(response.message, 'Error')
+                })
+        }
+
+        function editUser() {
+
+        }
+
+        function deleteUser() {
+
+        }
+    </script>
+@endpush

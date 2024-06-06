@@ -29,3 +29,6 @@
 <script src="js/chart-custom.js"></script>
 <!-- Custom JavaScript -->
 <script src="js/custom.js"></script>
+
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

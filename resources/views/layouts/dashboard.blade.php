@@ -35,6 +35,8 @@
    <!-- Optional JavaScript -->
    @include('layouts.dashboard._footer')
 
+   @stack('scripts')
+
 </body>
 
 
