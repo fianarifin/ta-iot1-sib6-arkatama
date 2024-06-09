@@ -75,7 +75,7 @@
                 <!-- Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle page-scroll" href="#details" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">CONTACT</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="left: 50%; transform: translateX(-50%);">
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="https://github.com/fianarifin"><span class="item-text">GITHUB</span></a>
                         <div class="dropdown-items-divide-hr"></div>
                         <a class="dropdown-item" href="#"><span class="item-text">WHATSAPP (+62 878-5283-8713)</span></a>
