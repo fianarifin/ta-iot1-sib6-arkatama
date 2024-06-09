@@ -33,10 +33,20 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword" class="sr-only">Password</label>
+                            <label for="password" class="sr-only">Password</label>
                             <div class="position-relative has-icon-right">
-                                <input name="password" type="password" id="exampleInputPassword"
-                                    class="form-control input-shadow" placeholder="Choose Password">
+                                <input name="password" type="password" id="password"
+                                    class="form-control input-shadow" placeholder="Password">
+                                <div class="form-control-position">
+                                    <i class="icon-lock"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirmation" class="sr-only">Password Confirmation</label>
+                            <div class="position-relative has-icon-right">
+                                <input name="password_confirmation" type="password" id="password_confirmation"
+                                    class="form-control input-shadow" placeholder="Password Confirmation">
                                 <div class="form-control-position">
                                     <i class="icon-lock"></i>
                                 </div>
