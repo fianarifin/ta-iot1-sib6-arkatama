@@ -29,6 +29,15 @@ Route::get('/dashboard', function () {
     return view('pages.dashboard', $data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/sensor', function () {
+    $data['title'] = 'Sensor';
+    $data['breadcrumbs'][]= [
+        'title' => 'Sensor',
+        'url' => route('sensor.index')
+    ];
+    return view('pages.sensor', $data);
+})->middleware(['auth', 'verified'])->name('sensor.index');
+
 // Route::get('/user', function () {
 //     return view('pages.dashboard');
 // })->name('user');

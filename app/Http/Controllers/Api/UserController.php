@@ -15,47 +15,64 @@ class UserController extends Controller
     {
         $users = User::orderBy('name', 'asc')->get();
         return response()->json([
-            'message' => 'Data user berhasil',
-            'data' => $users
+            'message'   => 'Berhasil menampilkan data user',
+            'data'      => $users
         ], 200);
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //Membuat valisdasi
-        $validate = $request->validate([
-            'name' => [
+        // mmebuat validasi
+        $validated = $request->validate([
+            'name'      => [
                 'required',
                 'string',
                 'min:3',
                 'max:255'
             ],
-            'email' => [
+            'email'     => [
                 'required',
                 'email',
                 'unique:users,email'
             ],
-            'password' => [
+            'password'  => [
                 'required',
                 'min:8'
             ],
+            // 'role' => [
+            //     'required',
+            //     'in:admin,user'
+            // ],
             // 'password_confirmation' => [
             //     'required',
             //     'same:password'
+            // ],
+            // 'avatar'    => [
+            //     'nullable',
+            //     'image',
+            //     'mimes:jpg,jpeg,png',
+            //     'max:2048' // 2MB
             // ]
         ]);
 
-        //user baru
-        $user = User::create($validate);
+        // unggah avatar
+        // if ($request->hasFile('avatar')) {
+        //     $avatar = $request->file('avatar');
+        //     $avatarPath = $avatar->store('avatars', 'public');
+
+        //     $validated['avatar'] = $avatarPath;
+        // }
+
+        // membuat user baru
+        $user = User::create($validated);
 
         return response()->json([
-            'message' => 'User baru berhasil',
-            'data' => $user
-        ], 200);
+            'message'   => 'Berhasil menambahkan user baru',
+            'data'      => $user
+        ], 201);
     }
 
     /**
@@ -65,8 +82,8 @@ class UserController extends Controller
     {
         $user = User::find($id);
         return response()->json([
-            'message' => 'Detail user berhasil',
-            'data' => $user
+            'message'   => 'Berhasil menampilkan detail user',
+            'data'      => $user
         ], 200);
     }
 
@@ -76,33 +93,59 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validate = $request->validate([
-            'name' => [
+        $validated = $request->validate([
+            'name'      => [
                 'required',
                 'string',
                 'min:3',
                 'max:255'
             ],
-            'email' => [
+            'email'     => [
                 'required',
                 'email',
-                'unique:users,email'
+                'unique:users,email,' . $id
             ],
-            'password' => [
-                'required',
+            'password'  => [
+                'nullable',
                 'min:8'
             ],
+            // 'role' => [
+            //     'required',
+            //     'in:admin,user'
+            // ],
             // 'password_confirmation' => [
             //     'required',
             //     'same:password'
+            // ],
+            // 'avatar'    => [
+            //     'nullable',
+            //     'image',
+            //     'mimes:jpg,jpeg,png',
+            //     'max:2048' // 2MB
             // ]
         ]);
 
+        // unggah avatar
+        // if ($request->hasFile('avatar')) {
+        //     $avatar = $request->file('avatar');
+        //     $avatarPath = $avatar->store('avatars', 'public');
+
+        //     $validated['avatar'] = $avatarPath;
+        // }
+
+        // jika ada password baru, maka update password
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
         $user = User::find($id);
-        $user->update($validate);
+        $user->update($validated);
+
         return response()->json([
-            'message' => 'Update data user berhasil',
-            'data' => $user
+            'message'   => 'Berhasil mengupdate data user',
+            'data'      => $user
         ], 200);
     }
 
@@ -115,8 +158,8 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json([
-            'message' => 'Hapus data user berhasil',
-            'data' => $user
+            'message'   => 'Berhasil menghapus data user',
+            'data'      => $user
         ], 200);
     }
 }

@@ -5,7 +5,7 @@
    @include('layouts.dashboard._head')
 </head>
 
-<body>
+<body >
    <!-- loader Start -->
    @include('layouts.dashboard.loader')
    <!-- loader END -->

@@ -3,8 +3,8 @@
         <div class="iq-sidebar-logo">
             <div class="top-logo">
                 <a href="index.html" class="logo">
-                    <img src="images/logo.png" class="img-fluid" alt="">
-                    <span>Sofbox</span>
+                    <img src="images/apii.png" class="img-fluid" alt="">
+                    <span>IOT</span>
                 </a>
             </div>
         </div>
