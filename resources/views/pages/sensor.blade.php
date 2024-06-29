@@ -83,26 +83,19 @@
         }
 
         async function requestGaugeRain() {
-            try {
-                const result = await fetch("{{ route('api.sensors.rain.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
-                    const sensorData = data.data;
+            const result = await fetch("{{ route('api.sensors.rain.index') }}");
+            if (result.ok) {
+                const data = await result.json();
+                const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
-                        const value = sensorData[0].value;
-                        gaugeRain.series[0].points[0].update(Number(value));
-                    } else {
-                        console.error("Rain data is missing or malformed", sensorData);
-                    }
-                } else {
-                    console.error("Failed to fetch rain data", result.statusText);
+                const value = sensorData.value;
+
+                if (gaugeRain) {
+                    gaugeRain.series[0].setData([Number(value)], true, true, true);
                 }
-            } catch (error) {
-                console.error("Error fetching rain data", error);
-            }
 
-            setTimeout(requestGaugeRain, 3000);
+                setTimeout(requestGaugeRain, 3000);
+            }
         }
 
         window.addEventListener('load', function() {
