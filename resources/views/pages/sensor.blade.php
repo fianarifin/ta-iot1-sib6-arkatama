@@ -30,7 +30,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Monitoring Sensor Hujan</h5>
-                        <p class="card-text">0= Tidak hujan, 1=Hujan</p>
+                        {{-- <p class="card-text">0= Tidak hujan, 1=Hujan</p> --}}
                         <div id="gaugeRain"></div>
                         <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
                     </div>
