@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rain_sensors', function (Blueprint $table) {
             $table->id();
-            $table->float('value');
+            $table->float('status');
             $table->timestamps();
         });
     }

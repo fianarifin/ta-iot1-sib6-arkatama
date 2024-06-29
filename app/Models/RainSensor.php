@@ -9,5 +9,5 @@ class RainSensor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['value'];
+    protected $fillable = ['status'];
 }

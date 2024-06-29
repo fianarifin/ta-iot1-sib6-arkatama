@@ -103,8 +103,8 @@
                     const data = await result.json();
                     const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
-                        const value = sensorData[0].value;
+                    if (sensorData && sensorData[0] && typeof sensorData[0].status !== 'undefined') {
+                        const value = sensorData[0].status;
                         gaugeRain.series[0].points[0].update(Number(value));
                     } else {
                         console.error("Rain data is missing or malformed", sensorData);

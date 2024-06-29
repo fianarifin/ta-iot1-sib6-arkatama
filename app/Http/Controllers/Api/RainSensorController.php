@@ -33,7 +33,7 @@ class RainSensorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'value' => 'required|numeric',
+            'status' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::create($request->all());
@@ -44,7 +44,7 @@ class RainSensorController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'value' => 'required|numeric',
+            'status' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::find($id);
