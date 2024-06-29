@@ -1,39 +1,39 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="row">
-        <!-- DHT11 Temperature Monitoring -->
-        <div class="col-sm-10 col-md-5">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Sensor Suhu</h4>
-                    <p class="card-text">Grafik berikut adalah monitoring sensor suhu 3 menit terakhir.</p>
-                    <div id="gaugeTemperature"></div>
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- DHT11 Temperature Monitoring -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Monitoring Sensor Suhu</h5>
+                        <div id="gaugeTemperature"></div>
+                        <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- DHT11 Humidity Monitoring -->
-        <div class="col-sm-10 col-md-5">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Sensor Kelembaban</h4>
-                    <p class="card-text">Grafik berikut adalah monitoring sensor kelembaban 3 menit terakhir.</p>
-                    <div id="gaugeHumidity"></div>
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+            <!-- DHT11 Humidity Monitoring -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Monitoring Sensor Kelembaban</h5>
+                        <div id="gaugeHumidity"></div>
+                        <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Rain Sensor Monitoring -->
-        <div class="col-sm-10 col-md-5">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Sensor Hujan</h4>
-                    <p class="card-text">Grafik berikut adalah monitoring sensor hujan 3 menit terakhir.</p>
-                    <div id="gaugeRain"></div>
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+            <!-- Rain Sensor Monitoring -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Monitoring Sensor Hujan</h5>
+                        <p class="card-text">0= Tidak hujan, 1=Hujan</p>
+                        <div id="gaugeRain"></div>
+                        <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,6 +43,7 @@
 @push('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
@@ -50,62 +51,78 @@
         let gaugeTemperature, gaugeHumidity, gaugeRain;
 
         async function requestGaugeTemperature() {
-            const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-            if (result.ok) {
-                const data = await result.json();
-                const sensorData = data.data;
+            try {
+                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
+                if (result.ok) {
+                    const data = await result.json();
+                    const sensorData = data.data;
 
-                const value = sensorData[0].temperature;
-
-                if (gaugeTemperature) {
-                    gaugeTemperature.series[0].setData([Number(value)], true, true, true);
+                    if (sensorData && sensorData[0] && typeof sensorData[0].temperature !== 'undefined') {
+                        const value = sensorData[0].temperature;
+                        gaugeTemperature.series[0].points[0].update(Number(value));
+                    } else {
+                        console.error("Temperature data is missing or malformed", sensorData);
+                    }
+                } else {
+                    console.error("Failed to fetch temperature data", result.statusText);
                 }
-
-                setTimeout(requestGaugeTemperature, 3000);
+            } catch (error) {
+                console.error("Error fetching temperature data", error);
             }
+
+            setTimeout(requestGaugeTemperature, 3000);
         }
 
         async function requestGaugeHumidity() {
-            const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-            if (result.ok) {
-                const data = await result.json();
-                const sensorData = data.data;
+            try {
+                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
+                if (result.ok) {
+                    const data = await result.json();
+                    const sensorData = data.data;
 
-                const value = sensorData[0].humidity;
-
-                if (gaugeHumidity) {
-                    gaugeHumidity.series[0].setData([Number(value)], true, true, true);
+                    if (sensorData && sensorData[0] && typeof sensorData[0].humidity !== 'undefined') {
+                        const value = sensorData[0].humidity;
+                        gaugeHumidity.series[0].points[0].update(Number(value));
+                    } else {
+                        console.error("Humidity data is missing or malformed", sensorData);
+                    }
+                } else {
+                    console.error("Failed to fetch humidity data", result.statusText);
                 }
-
-                setTimeout(requestGaugeHumidity, 3000);
+            } catch (error) {
+                console.error("Error fetching humidity data", error);
             }
+
+            setTimeout(requestGaugeHumidity, 3000);
         }
 
         async function requestGaugeRain() {
-            const result = await fetch("{{ route('api.sensors.rain.index') }}");
-            if (result.ok) {
-                const data = await result.json();
-                const sensorData = data.data;
+            try {
+                const result = await fetch("{{ route('api.sensors.rain.index') }}");
+                if (result.ok) {
+                    const data = await result.json();
+                    const sensorData = data.data;
 
-                const value = sensorData[0].value;
-
-                if (gaugeRain) {
-                    gaugeRain.series[0].setData([Number(value)], true, true, true);
+                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
+                        const value = sensorData[0].value;
+                        gaugeRain.series[0].points[0].update(Number(value));
+                    } else {
+                        console.error("Rain data is missing or malformed", sensorData);
+                    }
+                } else {
+                    console.error("Failed to fetch rain data", result.statusText);
                 }
-
-                setTimeout(requestGaugeRain, 3000);
+            } catch (error) {
+                console.error("Error fetching rain data", error);
             }
+
+            setTimeout(requestGaugeRain, 3000);
         }
 
         window.addEventListener('load', function() {
-            gaugeTemperature = new Highcharts.Chart({
+            gaugeTemperature = Highcharts.chart('gaugeTemperature', {
                 chart: {
-                    renderTo: 'gaugeTemperature',
-                    type: 'gauge',
-                    plotBackgroundColor: null,
-                    plotBackgroundImage: null,
-                    plotBorderWidth: 0,
-                    plotShadow: false,
+                    type: 'solidgauge',
                     height: '80%',
                     events: {
                         load: requestGaugeTemperature
@@ -115,66 +132,52 @@
                     text: 'Temperature'
                 },
                 pane: {
-                    startAngle: -150,
-                    endAngle: 150
+                    center: ['50%', '85%'],
+                    size: '140%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
                 },
                 yAxis: {
                     min: 0,
                     max: 50,
-                    minorTickInterval: 'auto',
-                    minorTickWidth: 1,
-                    minorTickLength: 10,
-                    minorTickPosition: 'inside',
-                    minorTickColor: '#666',
-                    tickPixelInterval: 30,
-                    tickWidth: 2,
-                    tickPosition: 'inside',
-                    tickLength: 10,
-                    tickColor: '#666',
-                    labels: {
-                        step: 2,
-                        rotation: 'auto',
-                        style: {
-                            color: '#E0E0E3'
-                        }
-                    },
+                    stops: [
+                        [0.1, '#55BF3B'], // green
+                        [0.5, '#DDDF0D'], // yellow
+                        [0.9, '#DF5353']  // red
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
                     title: {
-                        text: '°C',
-                        style: {
-                            color: '#A0A0A3'
-                        }
+                        y: -70,
+                        text: '°C'
                     },
-                    plotBands: [{
-                        from: 0,
-                        to: 15,
-                        color: '#55BF3B' // green
-                    }, {
-                        from: 16,
-                        to: 25,
-                        color: '#DDDF0D' // yellow
-                    }, {
-                        from: 26,
-                        to: 50,
-                        color: '#DF5353' // red
-                    }]
+                    labels: {
+                        y: 16
+                    }
                 },
                 series: [{
                     name: 'Temperature',
                     data: [0],
                     tooltip: {
                         valueSuffix: ' °C'
+                    },
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4">°C</span></div>'
                     }
                 }]
             });
 
-            gaugeHumidity = new Highcharts.Chart({
+            gaugeHumidity = Highcharts.chart('gaugeHumidity', {
                 chart: {
-                    renderTo: 'gaugeHumidity',
-                    type: 'gauge',
-                    plotBackgroundColor: null,
-                    plotBackgroundImage: null,
-                    plotBorderWidth: 0,
-                    plotShadow: false,
+                    type: 'solidgauge',
                     height: '80%',
                     events: {
                         load: requestGaugeHumidity
@@ -184,66 +187,52 @@
                     text: 'Humidity'
                 },
                 pane: {
-                    startAngle: -150,
-                    endAngle: 150
+                    center: ['50%', '85%'],
+                    size: '140%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
                 },
                 yAxis: {
                     min: 0,
                     max: 100,
-                    minorTickInterval: 'auto',
-                    minorTickWidth: 1,
-                    minorTickLength: 10,
-                    minorTickPosition: 'inside',
-                    minorTickColor: '#666',
-                    tickPixelInterval: 30,
-                    tickWidth: 2,
-                    tickPosition: 'inside',
-                    tickLength: 10,
-                    tickColor: '#666',
-                    labels: {
-                        step: 2,
-                        rotation: 'auto',
-                        style: {
-                            color: '#E0E0E3'
-                        }
-                    },
+                    stops: [
+                        [0.1, '#55BF3B'], // green
+                        [0.5, '#DDDF0D'], // yellow
+                        [0.9, '#DF5353']  // red
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
                     title: {
-                        text: '%',
-                        style: {
-                            color: '#A0A0A3'
-                        }
+                        y: -70,
+                        text: '%'
                     },
-                    plotBands: [{
-                        from: 0,
-                        to: 40,
-                        color: '#55BF3B' // green
-                    }, {
-                        from: 41,
-                        to: 70,
-                        color: '#DDDF0D' // yellow
-                    }, {
-                        from: 71,
-                        to: 100,
-                        color: '#DF5353' // red
-                    }]
+                    labels: {
+                        y: 16
+                    }
                 },
                 series: [{
                     name: 'Humidity',
                     data: [0],
                     tooltip: {
                         valueSuffix: ' %'
+                    },
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4">%</span></div>'
                     }
                 }]
             });
 
-            gaugeRain = new Highcharts.Chart({
+            gaugeRain = Highcharts.chart('gaugeRain', {
                 chart: {
-                    renderTo: 'gaugeRain',
-                    type: 'gauge',
-                    plotBackgroundColor: null,
-                    plotBackgroundImage: null,
-                    plotBorderWidth: 0,
-                    plotShadow: false,
+                    type: 'solidgauge',
                     height: '80%',
                     events: {
                         load: requestGaugeRain
@@ -253,54 +242,45 @@
                     text: 'Rain'
                 },
                 pane: {
-                    startAngle: -150,
-                    endAngle: 150
+                    center: ['50%', '85%'],
+                    size: '140%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
                 },
                 yAxis: {
                     min: 0,
-                    max: 100,
-                    minorTickInterval: 'auto',
-                    minorTickWidth: 1,
-                    minorTickLength: 10,
-                    minorTickPosition: 'inside',
-                    minorTickColor: '#666',
-                    tickPixelInterval: 30,
-                    tickWidth: 2,
-                    tickPosition: 'inside',
-                    tickLength: 10,
-                    tickColor: '#666',
-                    labels: {
-                        step: 2,
-                        rotation: 'auto',
-                        style: {
-                            color: '#E0E0E3'
-                        }
-                    },
+                    max: 1,
+                    stops: [
+                        [0.1, '#55BF3B'], // green
+                        [0.5, '#DDDF0D'], // yellow
+                        [0.9, '#DF5353']  // red
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
                     title: {
-                        text: '%',
-                        style: {
-                            color: '#A0A0A3'
-                        }
+                        y: -70,
+                        text: ''
                     },
-                    plotBands: [{
-                        from: 0,
-                        to: 30,
-                        color: '#55BF3B' // green
-                    }, {
-                        from: 31,
-                        to: 70,
-                        color: '#DDDF0D' // yellow
-                    }, {
-                        from: 71,
-                        to: 100,
-                        color: '#DF5353' // red
-                    }]
+                    labels: {
+                        y: 16
+                    }
                 },
                 series: [{
                     name: 'Rain',
                     data: [0],
                     tooltip: {
                         valueSuffix: ' %'
+                    },
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4">%</span></div>'
                     }
                 }]
             });
