@@ -50,72 +50,39 @@
     <script>
         let gaugeTemperature, gaugeHumidity, gaugeRain;
 
-        async function requestGaugeTemperature() {
+        async function fetchSensorData(route, gauge, key) {
             try {
-                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
+                const response = await fetch(route);
+                if (response.ok) {
+                    const data = await response.json();
                     const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].temperature !== 'undefined') {
-                        const value = sensorData[0].temperature;
-                        gaugeTemperature.series[0].points[0].update(Number(value));
+                    if (sensorData && sensorData[0] && typeof sensorData[0][key] !== 'undefined') {
+                        const value = sensorData[0][key];
+                        gauge.series[0].points[0].update(Number(value));
                     } else {
-                        console.error("Temperature data is missing or malformed", sensorData);
+                        console.error(`${key} data is missing or malformed`, sensorData);
                     }
                 } else {
-                    console.error("Failed to fetch temperature data", result.statusText);
+                    console.error(`Failed to fetch ${key} data`, response.statusText);
                 }
             } catch (error) {
-                console.error("Error fetching temperature data", error);
+                console.error(`Error fetching ${key} data`, error);
             }
+        }
 
+        async function requestGaugeTemperature() {
+            await fetchSensorData("{{ route('api.sensors.dht11.index') }}", gaugeTemperature, 'temperature');
             setTimeout(requestGaugeTemperature, 3000);
         }
 
         async function requestGaugeHumidity() {
-            try {
-                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
-                    const sensorData = data.data;
-
-                    if (sensorData && sensorData[0] && typeof sensorData[0].humidity !== 'undefined') {
-                        const value = sensorData[0].humidity;
-                        gaugeHumidity.series[0].points[0].update(Number(value));
-                    } else {
-                        console.error("Humidity data is missing or malformed", sensorData);
-                    }
-                } else {
-                    console.error("Failed to fetch humidity data", result.statusText);
-                }
-            } catch (error) {
-                console.error("Error fetching humidity data", error);
-            }
-
+            await fetchSensorData("{{ route('api.sensors.dht11.index') }}", gaugeHumidity, 'humidity');
             setTimeout(requestGaugeHumidity, 3000);
         }
 
         async function requestGaugeRain() {
-            try {
-                const result = await fetch("{{ route('api.sensors.rain.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
-                    const sensorData = data.data;
-
-                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
-                        const value = sensorData[0].value;
-                        gaugeRain.series[0].points[0].update(Number(value));
-                    } else {
-                        console.error("Rain data is missing or malformed", sensorData);
-                    }
-                } else {
-                    console.error("Failed to fetch rain data", result.statusText);
-                }
-            } catch (error) {
-                console.error("Error fetching rain data", error);
-            }
-
+            await fetchSensorData("{{ route('api.sensors.rain.index') }}", gaugeRain, 'value');
             setTimeout(requestGaugeRain, 3000);
         }
 
