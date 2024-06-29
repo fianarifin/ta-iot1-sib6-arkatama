@@ -30,8 +30,8 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Monitoring Sensor Hujan</h5>
-                        <p class="card-text">0= Tidak hujan, 1=Hujan</p>
                         <div id="gaugeRain"></div>
+                        <p id="rainStatus" class="card-text">Tidak Hujan</p>
                         <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
                     </div>
                 </div>
@@ -105,7 +105,13 @@
 
                     if (sensorData && sensorData[0] && typeof sensorData[0].status !== 'undefined') {
                         const value = sensorData[0].status;
-                        gaugeRain.series[0].points[0].update(Number(value));
+                        const status = value === 1 ? 'Hujan' : 'Tidak Hujan';
+
+                        // Update gaugeRain
+                        gaugeRain.series[0].points[0].update(value);
+
+                        // Update status text
+                        document.getElementById('rainStatus').innerText = status;
                     } else {
                         console.error("Rain data is missing or malformed", sensorData);
                     }
@@ -149,7 +155,7 @@
                     stops: [
                         [0.1, '#55BF3B'], // green
                         [0.5, '#DDDF0D'], // yellow
-                        [0.9, '#DF5353']  // red
+                        [0.9, '#DF5353'] // red
                     ],
                     lineWidth: 0,
                     tickWidth: 0,
@@ -204,7 +210,7 @@
                     stops: [
                         [0.1, '#55BF3B'], // green
                         [0.5, '#DDDF0D'], // yellow
-                        [0.9, '#DF5353']  // red
+                        [0.9, '#DF5353'] // red
                     ],
                     lineWidth: 0,
                     tickWidth: 0,
@@ -259,28 +265,32 @@
                     stops: [
                         [0.1, '#55BF3B'], // green
                         [0.5, '#DDDF0D'], // yellow
-                        [0.9, '#DF5353']  // red
+                        [0.9, '#DF5353'] // red
                     ],
                     lineWidth: 0,
                     tickWidth: 0,
                     minorTickInterval: null,
                     tickAmount: 2,
                     title: {
-                        y: -70,
-                        text: ''
+                        text: 'Status'
                     },
                     labels: {
-                        y: 16
+                        formatter: function() {
+                            return this.value === 1 ? 'Hujan' : 'Tidak Hujan';
+                        },
+                        style: {
+                            fontSize: '15px'
+                        }
                     }
                 },
                 series: [{
                     name: 'Rain',
                     data: [0],
                     tooltip: {
-                        valueSuffix: ' %'
+                        valueSuffix: ''
                     },
                     dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4">%</span></div>'
+                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4"></span></div>'
                     }
                 }]
             });
