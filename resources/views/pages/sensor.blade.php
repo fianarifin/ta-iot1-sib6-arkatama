@@ -51,49 +51,35 @@
         let gaugeTemperature, gaugeHumidity, gaugeRain;
 
         async function requestGaugeTemperature() {
-            try {
-                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
-                    const sensorData = data.data;
+            const result = await fetch("{{ route('api.sensors.dht11.index') }}");
+            if (result.ok) {
+                const data = await result.json();
+                const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].temperature !== 'undefined') {
-                        const value = sensorData[0].temperature;
-                        gaugeTemperature.series[0].points[0].update(Number(value));
-                    } else {
-                        console.error("Temperature data is missing or malformed", sensorData);
-                    }
-                } else {
-                    console.error("Failed to fetch temperature data", result.statusText);
+                const temperature = sensorData.temperature;
+
+                if (gaugeTemperature) {
+                    gaugeTemperature.series[0].setData([Number(temperature)], true, true, true);
                 }
-            } catch (error) {
-                console.error("Error fetching temperature data", error);
-            }
 
-            setTimeout(requestGaugeTemperature, 3000);
+                setTimeout(requestGaugeTemperature, 3000);
+            }
         }
 
         async function requestGaugeHumidity() {
-            try {
-                const result = await fetch("{{ route('api.sensors.dht11.index') }}");
-                if (result.ok) {
-                    const data = await result.json();
-                    const sensorData = data.data;
+            const result = await fetch("{{ route('api.sensors.dht11.index') }}");
+            if (result.ok) {
+                const data = await result.json();
+                const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].humidity !== 'undefined') {
-                        const value = sensorData[0].humidity;
-                        gaugeHumidity.series[0].points[0].update(Number(value));
-                    } else {
-                        console.error("Humidity data is missing or malformed", sensorData);
-                    }
-                } else {
-                    console.error("Failed to fetch humidity data", result.statusText);
+                const humidity = sensorData.humidity;
+
+                if (gaugeHumidity) {
+                    gaugeHumidity.series[0].setData([Number(humidity)], true, true, true);
                 }
-            } catch (error) {
-                console.error("Error fetching humidity data", error);
-            }
 
-            setTimeout(requestGaugeHumidity, 3000);
+                setTimeout(requestGaugeHumidity, 3000);
+            }
         }
 
         async function requestGaugeRain() {
