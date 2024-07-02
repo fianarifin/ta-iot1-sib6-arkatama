@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('/whatsapp', function () {
         $target = '087852838713';
-        $message = 'Ada kebocoran gas di rumah anda, segera cek dan perbaiki';
+        $message = 'Keadaan Hutan Pinus Loji sedang hujan deras';
         $response = WhatsappNotificationService::sendMessage($target, $message);
 
         echo $response;
