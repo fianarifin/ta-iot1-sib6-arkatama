@@ -1,4 +1,5 @@
-<?
+<?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -39,18 +40,18 @@ class RainSensorController extends Controller
 
         $sensorData = RainSensor::create($request->all());
 
-        // Trigger notification if the sensor value exceeds the threshold
+        // Cek nilai sensor dan kirim notifikasi jika lebih dari 700
         if ($sensorData->value > 700) {
+            // Mengirim notifikasi untuk semua admin
             WhatsappNotificationService::notifikasiHujanLebatMassal($sensorData->value);
         }
 
         return response()->json($sensorData, 201);
     }
-
     public function update(Request $request, $id)
     {
         $request->validate([
-            'value' => 'required|numeric',
+            'status' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::find($id);
@@ -59,11 +60,6 @@ class RainSensorController extends Controller
         }
 
         $sensorData->update($request->all());
-
-        // Trigger notification if the sensor value exceeds the threshold
-        if ($sensorData->value > 700) {
-            WhatsappNotificationService::notifikasiHujanLebatMassal($sensorData->value);
-        }
 
         return response()->json($sensorData, 200);
     }
