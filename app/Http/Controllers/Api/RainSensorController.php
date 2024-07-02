@@ -51,7 +51,7 @@ class RainSensorController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|numeric',
+            'value' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::find($id);
