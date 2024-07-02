@@ -1,10 +1,10 @@
 <?php
+
 namespace App\Service;
 
 use App\Models\SentMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
-
 
 class WhatsappNotificationService
 {
@@ -28,7 +28,7 @@ class WhatsappNotificationService
         $endPoint = self::getEndpoint() . '/send';
 
         $headers = [
-            'Authorization' => self::getToken()
+            'Authorization' => 'Bearer ' . self::getToken(),
         ];
 
         $options = [
@@ -51,12 +51,10 @@ class WhatsappNotificationService
 
     public static function formatMessage($message)
     {
-        $message .= PHP_EOL;
-        $message .= PHP_EOL;
-        $message .= 'Dikirimkan' . ' oleh IoT Manage Arifin';
+        $message .= PHP_EOL . PHP_EOL;
+        $message .= 'Dikirimkan oleh IoT Manage Arifin';
         return $message;
     }
-    // Existing methods...
 
     public static function notifikasiHujanLebat($user, $nilaiSensor)
     {
@@ -88,7 +86,7 @@ class WhatsappNotificationService
         }
 
         // If no notification has been sent before or the duration has passed
-        if (!$lastSent || abs(now()->diffInMinutes($lastSent->created_at)) >= $durasiPesan) {
+        if (!$lastSent || now()->diffInMinutes($lastSent->created_at) >= $durasiPesan) {
             foreach ($users as $user) {
                 self::notifikasiHujanLebat($user, $nilaiSensor);
             }
@@ -100,5 +98,3 @@ class WhatsappNotificationService
         }
     }
 }
-
-

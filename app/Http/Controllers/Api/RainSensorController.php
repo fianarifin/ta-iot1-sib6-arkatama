@@ -1,35 +1,14 @@
-<?
+<?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\RainSensor;
 use Illuminate\Http\Request;
+use App\Models\RainSensor;
 use App\Service\WhatsappNotificationService;
 
 class RainSensorController extends Controller
 {
-    public function index()
-    {
-        $sensorsData = RainSensor::orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get();
-
-        return response()->json([
-            'data' => $sensorsData,
-            'message' => 'Success',
-        ], 200);
-    }
-
-    public function show($id)
-    {
-        $sensorData = RainSensor::find($id);
-        if ($sensorData) {
-            return response()->json($sensorData, 200);
-        } else {
-            return response()->json(['message' => 'Data not found'], 400);
-        }
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -53,6 +32,7 @@ class RainSensorController extends Controller
         ]);
 
         $sensorData = RainSensor::find($id);
+
         if (!$sensorData) {
             return response()->json(['message' => 'Data not found'], 400);
         }
@@ -70,6 +50,7 @@ class RainSensorController extends Controller
     public function destroy($id)
     {
         $sensorData = RainSensor::find($id);
+
         if (!$sensorData) {
             return response()->json(['message' => 'Data not found'], 400);
         }
@@ -77,5 +58,26 @@ class RainSensorController extends Controller
         $sensorData->delete();
 
         return response()->json(['message' => 'Sensor data deleted successfully'], 200);
+    }
+
+    public function show($id)
+    {
+        $sensorData = RainSensor::find($id);
+
+        if ($sensorData) {
+            return response()->json($sensorData, 200);
+        } else {
+            return response()->json(['message' => 'Data not found'], 400);
+        }
+    }
+
+    public function index()
+    {
+        $sensorsData = RainSensor::limit(20)->get();
+
+        return response()->json([
+            'data' => $sensorsData,
+            'message' => 'Success',
+        ], 200);
     }
 }
