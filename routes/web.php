@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Service\WhatsappNotificationService;
 
 
 /*
@@ -22,8 +23,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $data['title'] = 'Dashboard';
-    $data['breadcrumbs'][]= [
-        'title' => 'Dashboard' ,
+    $data['breadcrumbs'][] = [
+        'title' => 'Dashboard',
         'url' => route('dashboard')
     ];
     return view('pages.dashboard', $data);
@@ -31,7 +32,7 @@ Route::get('/dashboard', function () {
 
 Route::get('/sensor', function () {
     $data['title'] = 'Sensor';
-    $data['breadcrumbs'][]= [
+    $data['breadcrumbs'][] = [
         'title' => 'Sensor',
         'url' => route('sensor.index')
     ];
@@ -58,6 +59,13 @@ Route::middleware('auth')->group(function () {
 
     //user
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/whatsapp', function () {
+        $target = '087852838713';
+        $message = 'Ada kebocoran gas di rumah anda, segera cek dan perbaiki';
+        $response = WhatsappNotificationService::sendMessage($target, $message);
+
+        echo $response;
+    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

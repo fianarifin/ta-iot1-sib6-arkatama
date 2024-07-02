@@ -272,7 +272,7 @@
                     minorTickInterval: null,
                     tickAmount: 2,
                     title: {
-                        text: 'Status'
+                        text: 'value'
                     },
                     labels: {
                         formatter: function() {

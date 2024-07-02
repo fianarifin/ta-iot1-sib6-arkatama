@@ -1,10 +1,10 @@
-<?php
-
+<?
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RainSensor;
 use Illuminate\Http\Request;
+use App\Service\WhatsappNotificationService;
 
 class RainSensorController extends Controller
 {
@@ -33,10 +33,15 @@ class RainSensorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'status' => 'required|numeric',
+            'value' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::create($request->all());
+
+        // Trigger notification if the sensor value exceeds the threshold
+        if ($sensorData->value > 700) {
+            WhatsappNotificationService::notifikasiHujanLebatMassal($sensorData->value);
+        }
 
         return response()->json($sensorData, 201);
     }
@@ -44,7 +49,7 @@ class RainSensorController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|numeric',
+            'value' => 'required|numeric',
         ]);
 
         $sensorData = RainSensor::find($id);
@@ -53,6 +58,11 @@ class RainSensorController extends Controller
         }
 
         $sensorData->update($request->all());
+
+        // Trigger notification if the sensor value exceeds the threshold
+        if ($sensorData->value > 700) {
+            WhatsappNotificationService::notifikasiHujanLebatMassal($sensorData->value);
+        }
 
         return response()->json($sensorData, 200);
     }
