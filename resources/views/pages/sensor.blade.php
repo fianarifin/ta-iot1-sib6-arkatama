@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Monitoring Sensor Hujan</h5>
                         <div id="gaugeRain"></div>
-                        <p id="rainStatus" class="card-text">Tidak Hujan</p>
+                        <h5 id="rainStatus" class="card-text">Tidak Hujan</h5>
                         <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
                     </div>
                 </div>
@@ -103,9 +103,17 @@
                     const data = await result.json();
                     const sensorData = data.data;
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].status !== 'undefined') {
-                        const value = sensorData[0].status;
-                        const status = value === 0 ? 'Tidak Hujan' : (value > 700 ? 'Hujan Deras' : 'Hujan Ringan');
+                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
+                        const value = sensorData[0].value;
+                        let status;
+
+                        if (value >= 0 && value <= 300) {
+                            status = 'Tidak Hujan';
+                        } else if (value > 300 && value <= 700) {
+                            status = 'Hujan Ringan';
+                        } else if (value > 700) {
+                            status = 'Hujan Deras';
+                        }
 
                         // Update gaugeRain
                         gaugeRain.series[0].points[0].update(value);
@@ -272,15 +280,11 @@
                     minorTickInterval: null,
                     tickAmount: 2,
                     title: {
-                        text: 'Value'
+                        y: -70,
+                        text: ''
                     },
                     labels: {
-                        formatter: function() {
-                            return this.value === 0 ? 'Tidak Hujan' : (this.value > 700 ? 'Hujan Deras' : 'Hujan Ringan');
-                        },
-                        style: {
-                            fontSize: '15px'
-                        }
+                        y: 16
                     }
                 },
                 series: [{
