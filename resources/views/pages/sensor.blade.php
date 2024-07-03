@@ -105,7 +105,7 @@
 
                     if (sensorData && sensorData[0] && typeof sensorData[0].status !== 'undefined') {
                         const value = sensorData[0].status;
-                        const status = value === 1 ? 'Hujan' : 'Tidak Hujan';
+                        const status = value === 0 ? 'Tidak Hujan' : (value > 700 ? 'Hujan Deras' : 'Hujan Ringan');
 
                         // Update gaugeRain
                         gaugeRain.series[0].points[0].update(value);
@@ -261,7 +261,7 @@
                 },
                 yAxis: {
                     min: 0,
-                    max: 1,
+                    max: 1023,
                     stops: [
                         [0.1, '#55BF3B'], // green
                         [0.5, '#DDDF0D'], // yellow
@@ -272,11 +272,11 @@
                     minorTickInterval: null,
                     tickAmount: 2,
                     title: {
-                        text: 'value'
+                        text: 'Value'
                     },
                     labels: {
                         formatter: function() {
-                            return this.value === 1 ? 'Hujan' : 'Tidak Hujan';
+                            return this.value === 0 ? 'Tidak Hujan' : (this.value > 700 ? 'Hujan Deras' : 'Hujan Ringan');
                         },
                         style: {
                             fontSize: '15px'
