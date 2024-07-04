@@ -40,7 +40,7 @@ class RainSensorController extends Controller
 
         $sensorData = RainSensor::create($request->all());
 
-        // Cek nilai sensor dan kirim notifikasi jika lebih dari 700
+        // Cek nilai sensor dan kirim notifikasi jika lebih dari 100 (adjust threshold if needed)
         if ($sensorData->value > 100) {
             // Mengirim notifikasi untuk semua admin
             WhatsappNotificationService::notifikasiHujanLebatMassal($sensorData->value);
@@ -48,6 +48,7 @@ class RainSensorController extends Controller
 
         return response()->json($sensorData, 201);
     }
+
     public function update(Request $request, $id)
     {
         $request->validate([
