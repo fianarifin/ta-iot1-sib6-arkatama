@@ -32,21 +32,22 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="form-group">
-                            <label for="exampleInputEmailId" class="sr-only">NO Hp</label>
+                        <div class="form-group">
+                            <label for="exampleInputPhoneNumber" class="sr-only">Phone Number</label>
                             <div class="position-relative has-icon-right">
-                                <input name="email" type="email" id="exampleInputEmailId"
-                                    class="form-control input-shadow" placeholder="Enter Your Email ID">
+                                <input name="phone_number" type="text" id="exampleInputPhoneNumber"
+                                    class="form-control input-shadow" placeholder="Enter Your Phone Number">
                                 <div class="form-control-position">
-                                    <i class="icon-envelope-open"></i>
+                                    <i class="icon-phone"></i>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
+
                         <div class="form-group">
                             <label for="password" class="sr-only">Password</label>
                             <div class="position-relative has-icon-right">
-                                <input name="password" type="password" id="password"
-                                    class="form-control input-shadow" placeholder="Password">
+                                <input name="password" type="password" id="password" class="form-control input-shadow"
+                                    placeholder="Password">
                                 <div class="form-control-position">
                                     <i class="icon-lock"></i>
                                 </div>
