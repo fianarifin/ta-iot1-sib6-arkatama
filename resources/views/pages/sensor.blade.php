@@ -101,22 +101,22 @@
                 const result = await fetch("{{ route('api.sensors.rain.index') }}");
                 if (result.ok) {
                     const data = await result.json();
-                    const sensorData = data.data[0];
+                    const sensorData = data.data;
 
-                    if (sensorData && typeof sensorData.value !== 'undefined') {
-                        const value = sensorData.value;
+                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
+                        const value = sensorData[0].value;
                         let status;
 
-                        if (value >= 0 && value < 20) {
+                        if (value >= 0 && value <= 300) {
                             status = 'Tidak Hujan';
-                        } else if (value >= 20 && value <= 100) {
+                        } else if (value > 300 && value <= 700) {
                             status = 'Hujan Ringan';
-                        } else if (value > 100) {
+                        } else if (value > 700) {
                             status = 'Hujan Deras';
                         }
 
-                        console.log('Updating gaugeRain with value:', value); // Debug log
-                        gaugeRain.series[0].points[0].update(Number(value));
+                        // Update gaugeRain
+                        gaugeRain.series[0].points[0].update(value);
 
                         // Update status text
                         document.getElementById('rainStatus').innerText = status;
@@ -132,9 +132,6 @@
 
             setTimeout(requestGaugeRain, 3000);
         }
-
-
-
 
         window.addEventListener('load', function() {
             gaugeTemperature = Highcharts.chart('gaugeTemperature', {
@@ -247,60 +244,60 @@
                 }]
             });
 
-gaugeRain = Highcharts.chart('gaugeRain', {
-        chart: {
-            type: 'solidgauge',
-            height: '80%',
-            events: {
-                load: requestGaugeRain
-            }
-        },
-        title: {
-            text: 'Rain'
-        },
-        pane: {
-            center: ['50%', '85%'],
-            size: '140%',
-            startAngle: -90,
-            endAngle: 90,
-            background: {
-                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
-                innerRadius: '60%',
-                outerRadius: '100%',
-                shape: 'arc'
-            }
-        },
-        yAxis: {
-            min: 0,
-            max: 1023,
-            stops: [
-                [0.1, '#55BF3B'], // green
-                [0.5, '#DDDF0D'], // yellow
-                [0.9, '#DF5353'] // red
-            ],
-            lineWidth: 0,
-            tickWidth: 0,
-            minorTickInterval: null,
-            tickAmount: 2,
-            title: {
-                y: -70,
-                text: ''
-            },
-            labels: {
-                y: 16
-            }
-        },
-        series: [{
-            name: 'Rain',
-            data: [0],
-            tooltip: {
-                valueSuffix: ''
-            },
-            dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4"></span></div>'
-            }
-        }]
-    });
+            gaugeRain = Highcharts.chart('gaugeRain', {
+                chart: {
+                    type: 'solidgauge',
+                    height: '80%',
+                    events: {
+                        load: requestGaugeRain
+                    }
+                },
+                title: {
+                    text: 'Rain'
+                },
+                pane: {
+                    center: ['50%', '85%'],
+                    size: '140%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    max: 1023,
+                    stops: [
+                        [0.1, '#55BF3B'], // green
+                        [0.5, '#DDDF0D'], // yellow
+                        [0.9, '#DF5353'] // red
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
+                    title: {
+                        y: -70,
+                        text: ''
+                    },
+                    labels: {
+                        y: 16
+                    }
+                },
+                series: [{
+                    name: 'Rain',
+                    data: [0],
+                    tooltip: {
+                        valueSuffix: ''
+                    },
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:25px">{y}</span><br/><span style="font-size:12px;opacity:0.4"></span></div>'
+                    }
+                }]
+            });
         });
     </script>
 @endpush
