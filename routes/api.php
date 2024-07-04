@@ -11,7 +11,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
 //route group api
 Route::group(['as' => 'api.'], function (){
     //resource
@@ -24,6 +23,5 @@ Route::group(['as' => 'api.'], function (){
     Route::resource('sensors/dht11', Dht11SensorController::class)->names('sensors.dht11');
 
     Route::resource('sensors/rain', RainSensorController::class)->names('sensors.rain');
-    //Route::apiResource('rain-sensors', RainSensorController::class);
 });
 

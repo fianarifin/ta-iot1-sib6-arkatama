@@ -135,6 +135,7 @@
         }
 
 
+
         window.addEventListener('load', function() {
             gaugeTemperature = Highcharts.chart('gaugeTemperature', {
                 chart: {
