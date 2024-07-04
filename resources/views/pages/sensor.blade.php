@@ -116,6 +116,7 @@
                         }
 
                         // Update gaugeRain
+                        console.log('Updating gaugeRain with value:', value); // Debug log
                         gaugeRain.series[0].points[0].update(value);
 
                         // Update status text
@@ -132,6 +133,7 @@
 
             setTimeout(requestGaugeRain, 3000);
         }
+
 
         window.addEventListener('load', function() {
             gaugeTemperature = Highcharts.chart('gaugeTemperature', {
