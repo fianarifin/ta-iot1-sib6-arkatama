@@ -64,14 +64,14 @@ class WhatsappNotificationService
         $name = $user->name;
 
         $message = "Peringatan!" . PHP_EOL;
-        $message .= "Halo $name, terdeteksi hujan lebat pada sensor Anda. Nilai sensor: $nilaiSensor. Harap waspada terhadap kemungkinan banjir.";
+        $message .= "Halo $name, terdeteksi hujan lebat pada hutan pinus loji";
 
         return self::sendMessage($target, $message);
     }
 
     public static function notifikasiHujanLebatMassal($nilaiSensor)
     {
-        $nilaiMaksimalSensor = 100; // threshold for heavy rain
+        $nilaiMaksimalSensor = 1000; // threshold for heavy rain
         $durasiPesan = 3; // duration in minutes
 
         // Fetch users with phone numbers
