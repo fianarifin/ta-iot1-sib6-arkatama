@@ -101,10 +101,10 @@
                 const result = await fetch("{{ route('api.sensors.rain.index') }}");
                 if (result.ok) {
                     const data = await result.json();
-                    const sensorData = data.data;
+                    const sensorData = data.data[0];
 
-                    if (sensorData && sensorData[0] && typeof sensorData[0].value !== 'undefined') {
-                        const value = sensorData[0].value;
+                    if (sensorData && typeof sensorData.value !== 'undefined') {
+                        const value = sensorData.value;
                         let status;
 
                         if (value >= 0 && value < 20) {
@@ -115,9 +115,8 @@
                             status = 'Hujan Deras';
                         }
 
-                        // Update gaugeRain
                         console.log('Updating gaugeRain with value:', value); // Debug log
-                        gaugeRain.series[0].points[0].update(value);
+                        gaugeRain.series[0].points[0].update(Number(value));
 
                         // Update status text
                         document.getElementById('rainStatus').innerText = status;
@@ -133,6 +132,7 @@
 
             setTimeout(requestGaugeRain, 3000);
         }
+
 
 
 
