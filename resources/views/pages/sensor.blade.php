@@ -107,11 +107,11 @@
                         const value = sensorData[0].value;
                         let status;
 
-                        if (value >= 0 && value <= 300) {
+                        if (value >= 0 && value < 20) {
                             status = 'Tidak Hujan';
-                        } else if (value > 300 && value <= 700) {
+                        } else if (value >= 20 && value <= 100) {
                             status = 'Hujan Ringan';
-                        } else if (value > 700) {
+                        } else if (value > 100) {
                             status = 'Hujan Deras';
                         }
 

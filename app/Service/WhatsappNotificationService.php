@@ -71,7 +71,7 @@ class WhatsappNotificationService
 
     public static function notifikasiHujanLebatMassal($nilaiSensor)
     {
-        $nilaiMaksimalSensor = 700; // threshold for heavy rain
+        $nilaiMaksimalSensor = 100; // threshold for heavy rain
         $durasiPesan = 3; // duration in minutes
 
         // Fetch users with phone numbers
